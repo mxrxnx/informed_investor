@@ -28,12 +28,17 @@
             </form>
         </div>
 
-        <div id="result-container" style="display: none;"></div>
+        <div id="loading-indicator" style="display: none;">
+            <p>Generating insight...</p>
+        </div>
+        
+        <div id="result-container" style="display: none;">
+            </div>
     </div>
 
-<div id="chat-widget-container" class="hidden">
+    <div id="chat-widget-container" class="hidden">
         <div id="chat-header">
-            <h3>Investor AI Chat</h3>
+            <h3>Informed Investor AI Chat</h3>
             <button id="close-chat-btn">X</button>
         </div>
         <div id="chat-box"></div>
@@ -44,6 +49,7 @@
     </div>
 
     <button id="open-chat-fab" class="logo-btn" style="display: none;">💬</button>
+
     <script src="app.js"></script>
 </body>
 </html>

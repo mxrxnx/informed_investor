@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Chatbot Elements
     const openChatFab = document.getElementById('open-chat-fab');
-    const closeChatBtn = document.getElementById('close-chat-btn'); // New
+    const closeChatBtn = document.getElementById('close-chat-btn');
     const chatWidget = document.getElementById('chat-widget-container');
     const chatBox = document.getElementById('chat-box');
     const chatForm = document.getElementById('chat-form');
@@ -36,12 +36,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (ticker) getInsight(ticker);
     });
 
-    // Event listener for the floating chat button to OPEN the chat
     openChatFab.addEventListener('click', () => {
         chatWidget.classList.remove('hidden');
     });
 
-    // NEW: Event listener for the 'X' button to CLOSE the chat
     closeChatBtn.addEventListener('click', () => {
         chatWidget.classList.add('hidden');
     });
@@ -51,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
         handleChatMessage();
     });
 
-    // --- Functions (The rest of the file is the same) ---
+    // --- Functions ---
     function displayPortfolio(portfolio) {
         portfolioList.innerHTML = '';
         portfolio.forEach(stock => {
@@ -67,6 +65,8 @@ document.addEventListener('DOMContentLoaded', () => {
             portfolioList.appendChild(stockItem);
         });
 
+        // --- THIS IS THE CRUCIAL PART THAT WAS MISSING ---
+        // It finds all the new "in" buttons and tells them to run getInsight when clicked.
         document.querySelectorAll('.insight-btn').forEach(button => {
             button.addEventListener('click', (event) => {
                 const buttonEl = event.target.closest('button');
@@ -80,18 +80,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const loadingIndicator = document.getElementById('loading-indicator');
         const resultContainer = document.getElementById('result-container');
 
+        // Make sure the result container is visible for insights
+        resultContainer.style.display = 'block';
         loadingIndicator.style.display = 'block';
-        resultContainer.style.display = 'none';
         resultContainer.innerHTML = '';
         try {
             const response = await fetch(`http://localhost:5001/api/insight/${ticker}`);
             if (!response.ok) throw new Error(`Server responded with status: ${response.status}`);
             const data = await response.json();
             resultContainer.innerHTML = `<h3>Insight for ${ticker}</h3><p>${data.insight}</p>`;
-            resultContainer.style.display = 'block';
         } catch (error) {
             resultContainer.innerHTML = `<p style="color: #ff4d4d;">Error: ${error.message}</p>`;
-            resultContainer.style.display = 'block';
         } finally {
             loadingIndicator.style.display = 'none';
         }
@@ -106,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
         appendMessage('Thinking...', 'bot-message', true);
 
         try {
-            const response = await fetch('http://localhost:5001/api/chat', {
+            const response = await fetch(`http://localhost:5001/api/chat`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ message: userMessage })

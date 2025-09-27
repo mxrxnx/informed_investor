@@ -41,7 +41,7 @@ chat_model = genai.GenerativeModel("gemini-flash-latest",
 
 @app.route("/")
 def home():
-    return "<h1>Invesight Backend is Running</h1>"
+    return "<h1>Informed Investor Backend is Running</h1>"
 
 # --- Existing Insight Endpoint (Unchanged) ---
 @app.route("/api/insight/<string:ticker>")
