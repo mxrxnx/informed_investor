@@ -1,4 +1,3 @@
-// frontend/app.js
 document.addEventListener('DOMContentLoaded', () => {
     // --- DOM Elements ---
     const connectBtn = document.getElementById('connect-btn');
@@ -6,11 +5,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const portfolioView = document.getElementById('portfolio-view');
     const portfolioList = document.getElementById('portfolio-list');
     const searchForm = document.getElementById('insight-form');
-    const tickerInput = document.getElementById('ticker-input');
-    const resultContainer = document.getElementById('result-container');
-    const loadingIndicator = document.getElementById('loading-indicator');
-
-    // --- Mock Data (Simulating a Robinhood/Plaid API Call) ---
+    
+    // Chatbot Elements
+    const openChatFab = document.getElementById('open-chat-fab');
+    const closeChatBtn = document.getElementById('close-chat-btn'); // New
+    const chatWidget = document.getElementById('chat-widget-container');
+    const chatBox = document.getElementById('chat-box');
+    const chatForm = document.getElementById('chat-form');
+    const chatInput = document.getElementById('chat-input');
+    
+    // --- Mock Data ---
     const mockPortfolio = [
         { ticker: 'AAPL', shares: 10 },
         { ticker: 'TSLA', shares: 5 },
@@ -22,25 +26,37 @@ document.addEventListener('DOMContentLoaded', () => {
     connectBtn.addEventListener('click', () => {
         connectView.style.display = 'none';
         portfolioView.style.display = 'block';
+        openChatFab.style.display = 'flex';
         displayPortfolio(mockPortfolio);
     });
 
     searchForm.addEventListener('submit', (event) => {
         event.preventDefault();
-        const ticker = tickerInput.value.trim().toUpperCase();
-        if (ticker) {
-            getInsight(ticker);
-        }
+        const ticker = document.getElementById('ticker-input').value.trim().toUpperCase();
+        if (ticker) getInsight(ticker);
     });
 
-    // --- Functions ---
+    // Event listener for the floating chat button to OPEN the chat
+    openChatFab.addEventListener('click', () => {
+        chatWidget.classList.remove('hidden');
+    });
+
+    // NEW: Event listener for the 'X' button to CLOSE the chat
+    closeChatBtn.addEventListener('click', () => {
+        chatWidget.classList.add('hidden');
+    });
+
+    chatForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        handleChatMessage();
+    });
+
+    // --- Functions (The rest of the file is the same) ---
     function displayPortfolio(portfolio) {
-        portfolioList.innerHTML = ''; // Clear previous list
+        portfolioList.innerHTML = '';
         portfolio.forEach(stock => {
             const stockItem = document.createElement('div');
             stockItem.className = 'stock-item';
-            
-            // Update the button text and class here
             stockItem.innerHTML = `
                 <div class="stock-info">
                     <div class="ticker">${stock.ticker}</div>
@@ -51,10 +67,8 @@ document.addEventListener('DOMContentLoaded', () => {
             portfolioList.appendChild(stockItem);
         });
 
-        // Add event listeners to the new buttons
         document.querySelectorAll('.insight-btn').forEach(button => {
             button.addEventListener('click', (event) => {
-                // Use .closest('button') to make sure we get the button element
                 const buttonEl = event.target.closest('button');
                 const ticker = buttonEl.dataset.ticker;
                 getInsight(ticker);
@@ -63,28 +77,65 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function getInsight(ticker) {
-        // Show loading state and clear/hide previous results
+        const loadingIndicator = document.getElementById('loading-indicator');
+        const resultContainer = document.getElementById('result-container');
+
         loadingIndicator.style.display = 'block';
         resultContainer.style.display = 'none';
         resultContainer.innerHTML = '';
-
         try {
             const response = await fetch(`http://localhost:5001/api/insight/${ticker}`);
-            if (!response.ok) {
-                throw new Error(`Server responded with status: ${response.status}`);
-            }
+            if (!response.ok) throw new Error(`Server responded with status: ${response.status}`);
             const data = await response.json();
-            
-            // Display the result
             resultContainer.innerHTML = `<h3>Insight for ${ticker}</h3><p>${data.insight}</p>`;
             resultContainer.style.display = 'block';
-
         } catch (error) {
             resultContainer.innerHTML = `<p style="color: #ff4d4d;">Error: ${error.message}</p>`;
             resultContainer.style.display = 'block';
-            console.error('Fetch error:', error);
         } finally {
-            loadingIndicator.style.display = 'none'; // Always hide loading indicator
+            loadingIndicator.style.display = 'none';
         }
     }
-});const response = await fetch(`http://localhost:5001/api/insight/${ticker}`);
+
+    async function handleChatMessage() {
+        const userMessage = chatInput.value.trim();
+        if (!userMessage) return;
+
+        appendMessage(userMessage, 'user-message');
+        chatInput.value = '';
+        appendMessage('Thinking...', 'bot-message', true);
+
+        try {
+            const response = await fetch('http://localhost:5001/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: userMessage })
+            });
+            if (!response.ok) throw new Error('Network response was not ok.');
+            const data = await response.json();
+            updateLastBotMessage(data.reply);
+        } catch (error) {
+            updateLastBotMessage('Sorry, I encountered an error. Please try again.');
+            console.error('Chat error:', error);
+        }
+    }
+
+    function appendMessage(text, className, isTyping = false) {
+        const messageElement = document.createElement('div');
+        messageElement.className = `chat-message ${className}`;
+        messageElement.textContent = text;
+        if (isTyping) {
+            messageElement.id = 'typing-indicator';
+        }
+        chatBox.appendChild(messageElement);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function updateLastBotMessage(text) {
+        const typingIndicator = document.getElementById('typing-indicator');
+        if (typingIndicator) {
+            typingIndicator.textContent = text;
+            typingIndicator.id = '';
+        }
+    }
+});
