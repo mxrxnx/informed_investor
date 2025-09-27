@@ -39,12 +39,14 @@ document.addEventListener('DOMContentLoaded', () => {
         portfolio.forEach(stock => {
             const stockItem = document.createElement('div');
             stockItem.className = 'stock-item';
+            
+            // Update the button text and class here
             stockItem.innerHTML = `
                 <div class="stock-info">
                     <div class="ticker">${stock.ticker}</div>
                     <div class="shares">${stock.shares} Shares</div>
                 </div>
-                <button class="insight-btn" data-ticker="${stock.ticker}">Get Insight</button>
+                <button class="insight-btn logo-btn" data-ticker="${stock.ticker}">in</button>
             `;
             portfolioList.appendChild(stockItem);
         });
@@ -52,7 +54,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Add event listeners to the new buttons
         document.querySelectorAll('.insight-btn').forEach(button => {
             button.addEventListener('click', (event) => {
-                const ticker = event.target.dataset.ticker;
+                // Use .closest('button') to make sure we get the button element
+                const buttonEl = event.target.closest('button');
+                const ticker = buttonEl.dataset.ticker;
                 getInsight(ticker);
             });
         });
@@ -83,4 +87,4 @@ document.addEventListener('DOMContentLoaded', () => {
             loadingIndicator.style.display = 'none'; // Always hide loading indicator
         }
     }
-});
+});const response = await fetch(`http://localhost:5001/api/insight/${ticker}`);

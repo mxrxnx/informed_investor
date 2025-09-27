@@ -1,8 +1,10 @@
 /* frontend/style.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
+
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background-color: #1A201A; /* Dark background */
-    color: #e0e0e0; /* Light text */
+    background-color: #1A201A;
+    color: #e0e0e0;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -11,7 +13,7 @@ body {
 }
 
 .container {
-    background-color: #1e1e1e; /* Slightly lighter dark for the container */
+    background-color: #1e1e1e;
     padding: 40px;
     border-radius: 12px;
     border: 1px solid #333;
@@ -23,7 +25,7 @@ body {
 
 header h1 {
     font-size: 2.5rem;
-    color: #28a745; /* Money green */
+    color: #28a745;
     margin-bottom: 10px;
 }
 
@@ -53,7 +55,7 @@ button {
     font-size: 1rem;
     font-weight: bold;
     color: white;
-    background-color: #28a745; /* Money green */
+    background-color: #28a745;
     border: none;
     border-radius: 8px;
     cursor: pointer;
@@ -61,7 +63,21 @@ button {
 }
 
 button:hover {
-    background-color: #218838; /* Darker green on hover */
+    background-color: #218838;
+}
+
+/* --- New Styles for the "in" Logo Button --- */
+.logo-btn {
+    font-family: 'Poppins', sans-serif; /* Use the new font */
+    font-weight: 700; /* Bold */
+    font-size: 1.2rem;
+    width: 50px; /* Fixed width */
+    height: 50px; /* Fixed height */
+    padding: 0;
+    border-radius: 50%; /* Make it circular */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #loading-indicator {
@@ -78,7 +94,6 @@ button:hover {
     line-height: 1.6;
 }
 
-/* New styles for the portfolio section */
 #portfolio-view h2 {
     color: #e0e0e0;
     border-bottom: 1px solid #444;
