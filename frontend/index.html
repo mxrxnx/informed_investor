@@ -10,19 +10,32 @@
     <div class="container">
         <header>
             <h1>Invesight 📈</h1>
-            <p>Enter a stock ticker to get an AI-powered insight.</p>
+            <p>Your personal AI-powered investment dashboard.</p>
         </header>
         
-        <form id="insight-form">
-            <input type="text" id="ticker-input" placeholder="e.g., AAPL, TSLA, NVDA" required>
-            <button type="submit">Generate Insight</button>
-        </form>
+        <div id="connect-view">
+            <button id="connect-btn">Connect Brokerage to View Portfolio</button>
+        </div>
+
+        <div id="portfolio-view" style="display: none;">
+            <h2>My Portfolio</h2>
+            <div id="portfolio-list">
+                </div>
+
+            <hr style="border-color: #444; margin: 30px 0;">
+
+            <h2>Research a Stock</h2>
+            <form id="insight-form">
+                <input type="text" id="ticker-input" placeholder="e.g., AAPL, TSLA, NVDA" required>
+                <button type="submit">Get Insight</button>
+            </form>
+        </div>
 
         <div id="loading-indicator" style="display: none;">
             <p>Generating insight...</p>
         </div>
         
-        <div id="result-container">
+        <div id="result-container" style="display: none;">
             </div>
     </div>
 
