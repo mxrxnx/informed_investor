@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invesight</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Invesight 📈</h1>
+            <p>Enter a stock ticker to get an AI-powered insight.</p>
+        </header>
+        
+        <form id="insight-form">
+            <input type="text" id="ticker-input" placeholder="e.g., AAPL, TSLA, NVDA" required>
+            <button type="submit">Generate Insight</button>
+        </form>
+
+        <div id="loading-indicator" style="display: none;">
+            <p>Generating insight...</p>
+        </div>
+        
+        <div id="result-container">
+            </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
